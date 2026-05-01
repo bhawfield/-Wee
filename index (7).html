@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$WEE — The Ride Never Ends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --green: #00ff88;
+      --red: #ff3b3b;
+      --yellow: #ffe600;
+      --bg: #0a0a0f;
+      --panel: #12121a;
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e8e8;
+      --muted: #666;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+    .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; opacity: 0; animation: twinkle var(--d) ease-in-out infinite var(--delay); }
+    @keyframes twinkle { 0%,100%{opacity:0} 50%{opacity:var(--bright)} }
+    .page { position: relative; z-index: 1; }
+    .hero { text-align: center; padding: 60px 20px 20px; }
+    .hero-tag { display: inline-block; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--green); border: 1px solid var(--green); padding: 4px 12px; border-radius: 20px; margin-bottom: 20px; }
+    h1 { font-family: 'Bangers', cursive; font-size: clamp(72px, 18vw, 140px); letter-spacing: 0.04em; line-height: 0.9; color: white; }
+    h1 span.green { color: var(--green); }
+    h1 span.red { color: var(--red); }
+    .hero-sub { font-family: 'DM Mono', monospace; font-size: clamp(13px, 3vw, 16px); color: var(--muted); margin-top: 16px; letter-spacing: 0.05em; }
+    .gif-hero {
+      max-width: 820px;
+      margin: 30px auto 0;
+      padding: 0 20px;
+    }
+    .gif-hero img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid rgba(0,255,136,0.15);
+      box-shadow: 0 0 40px rgba(0,255,136,0.08);
+    }
+    .price-section { text-align: center; padding: 30px 20px 10px; }
+    .price-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .price-display { font-family: 'Bangers', cursive; font-size: clamp(40px, 10vw, 72px); letter-spacing: 0.04em; transition: color 0.3s; }
+    .price-change { font-family: 'DM Mono', monospace; font-size: 14px; margin-top: 4px; transition: color 0.3s; }
+    .stats-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 20px 20px; max-width: 600px; margin: 0 auto; }
+    .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px 20px; text-align: center; flex: 1; min-width: 120px; }
+    .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .stat-value { font-family: 'Bangers', cursive; font-size: 22px; letter-spacing: 0.04em; }
+    .meter-section { max-width: 500px; margin: 10px auto 30px; padding: 0 20px; text-align: center; }
+    .meter-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .meter-bar-bg { width: 100%; height: 14px; background: var(--panel); border: 1px solid var(--border); border-radius: 7px; overflow: hidden; }
+    .meter-bar-fill { height: 100%; border-radius: 7px; transition: width 0.8s ease, background 0.8s ease; }
+    .meter-ends { display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 5px; }
+    .cta-section { text-align: center; padding: 10px 20px 40px; }
+    .btn { display: inline-block; font-family: 'Bangers', cursive; font-size: 22px; letter-spacing: 0.08em; padding: 14px 32px; border-radius: 10px; text-decoration: none; margin: 8px; transition: transform 0.15s, filter 0.15s; cursor: pointer; }
+    .btn:hover { transform: scale(1.05); filter: brightness(1.15); }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--green); color: #000; }
+    .btn-secondary { background: transparent; color: var(--green); border: 2px solid var(--green); }
+    .contract-section { text-align: center; padding: 0 20px 20px; }
+    .contract-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .contract-address { font-family: 'DM Mono', monospace; font-size: clamp(10px, 2.5vw, 13px); color: #888; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; display: inline-block; word-break: break-all; cursor: pointer; transition: border-color 0.2s; max-width: 90%; }
+    .contract-address:hover { border-color: var(--green); color: var(--green); }
+    .copy-hint { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 5px; }
+    .copied-flash { color: var(--green); font-family: 'DM Mono', monospace; font-size: 11px; margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
+    .copied-flash.show { opacity: 1; }
+    .social-row { display: flex; justify-content: center; gap: 16px; padding: 10px 20px 20px; flex-wrap: wrap; }
+    .social-link { font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 20px; padding: 6px 16px; transition: color 0.2s, border-color 0.2s; }
+    .social-link:hover { color: var(--text); border-color: rgba(255,255,255,0.3); }
+    .disclaimer { text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); padding: 20px; border-top: 1px solid var(--border); line-height: 1.6; }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="page">
+  <section class="hero">
+    <div class="hero-tag">Solana Memecoin · The Ride Never Ends</div>
+    <h1><span class="green">$WEE</span><br><span class="red">COIN</span></h1>
+    <p class="hero-sub">everyone loves the pump · nobody survives the dump</p>
+  </section>
+
+  <div class="gif-hero">
+    <img src="wee.gif" alt="$WEE coin — the ride never ends" />
+  </div>
+
+  <div class="meter-section">
+    <div class="meter-label">Holder Emotional Index</div>
+    <div class="meter-bar-bg">
+      <div class="meter-bar-fill" id="moodBar" style="width:50%; background: var(--yellow);"></div>
+    </div>
+    <div class="meter-ends"><span>😭 AWWW</span><span>🤑 WEE!</span></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Holders</div>
+      <div class="stat-value" id="holdersVal" style="color: var(--green);">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Times crashed</div>
+      <div class="stat-value" style="color: var(--red);">∞</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Times recovered</div>
+      <div class="stat-value" style="color: var(--yellow);">also ∞</div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <a href="YOUR_PUMPFUN_URL_HERE" class="btn btn-primary" id="buyBtn">Buy on Pump.fun</a>
+    <a href="YOUR_CHART_URL_HERE" class="btn btn-secondary">View Chart</a>
+  </div>
+
+  <div class="contract-section">
+    <div class="contract-label">Contract Address</div>
+    <div class="contract-address" id="contractAddr" onclick="copyContract()">YOUR_SOL_ADDRESS_HERE</div>
+    <div class="copy-hint">click to copy</div>
+    <div class="copied-flash" id="copiedFlash">✓ copied!</div>
+  </div>
+
+  <div class="social-row">
+    <a href="YOUR_TWITTER_URL" class="social-link">𝕏 Twitter</a>
+    <a href="YOUR_TELEGRAM_URL" class="social-link">✈ Telegram</a>
+    <a href="YOUR_DEXSCREENER_URL" class="social-link">◈ Dexscreener</a>
+  </div>
+
+  <footer class="disclaimer">
+    $WEE is a meme coin with no intrinsic value or financial return expectation.<br>
+    Not financial advice. Just a ride. Don't forget to sell.<br>(you won't sell)
+  </footer>
+</div>
+
+<script>
+/* STARS */
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${-Math.random()*5}s;--bright:${0.3+Math.random()*0.7}`;
+  starsEl.appendChild(s);
+}
+
+
+/* MOOD BAR */
+const moodBar = document.getElementById('moodBar');
+function updateMood(progress) {
+  const isUp = progress < 0.55;
+  const mood = isUp
+    ? Math.round(progress / 0.55 * 100)
+    : Math.round((1 - (progress - 0.55) / 0.45) * 100);
+  moodBar.style.width = mood + '%';
+  moodBar.style.background = mood > 66 ? '#00ff88' : mood > 33 ? '#ffe600' : '#ff3b3b';
+}
+
+/* REAL HOLDER COUNT via Solana RPC */
+const holdersVal = document.getElementById('holdersVal');
+const TOKEN_MINT = 'YOUR_SOL_ADDRESS_HERE'; // <-- replace with your actual mint address
+const RPC_URL = 'https://api.mainnet-beta.solana.com';
+
+async function fetchHolders() {
+  if (TOKEN_MINT === 'YOUR_SOL_ADDRESS_HERE') {
+    holdersVal.textContent = '—';
+    return;
+  }
+  holdersVal.textContent = '...';
+  try {
+    const res = await fetch(RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'getProgramAccounts',
+        params: [
+          'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
+          {
+            filters: [
+              { dataSize: 165 },
+              { memcmp: { offset: 0, bytes: TOKEN_MINT } }
+            ],
+            encoding: 'base64',
+            withContext: false,
+            dataSlice: { offset: 64, length: 8 }
+          }
+        ]
+      })
+    });
+    const json = await res.json();
+    if (!json.result) throw new Error('no result');
+
+    // Decode each account's token balance (bytes 64-71, little-endian u64)
+    // and count only accounts with balance > 0 (real holders)
+    let count = 0;
+    for (const acct of json.result) {
+      const b64 = acct.account.data[0];
+      const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+      let amount = 0n;
+      for (let i = 7; i >= 0; i--) amount = (amount << 8n) | BigInt(bytes[i]);
+      if (amount > 0n) count++;
+    }
+    holdersVal.textContent = count > 0 ? count.toLocaleString() : '—';
+  } catch (e) {
+    holdersVal.textContent = '—';
+  }
+}
+
+fetchHolders();
+setInterval(fetchHolders, 60000);
+
+/* MOOD LOOP — synced to GIF's ~9s cycle */
+const CYCLE = 9000;
+function animateMood(ts) {
+  const progress = (ts % CYCLE) / CYCLE;
+  updateMood(progress);
+  requestAnimationFrame(animateMood);
+}
+requestAnimationFrame(animateMood);
+
+/* COPY */
+function copyContract() {
+  navigator.clipboard.writeText(document.getElementById('contractAddr').textContent.trim()).catch(()=>{});
+  const f = document.getElementById('copiedFlash');
+  f.classList.add('show');
+  setTimeout(() => f.classList.remove('show'), 2000);
+}
+
+/* BUY WIGGLE */
+const buyBtn = document.getElementById('buyBtn');
+setInterval(() => {
+  buyBtn.style.transform = 'scale(1.08) rotate(-1deg)';
+  setTimeout(() => { buyBtn.style.transform = 'scale(1.08) rotate(1deg)'; setTimeout(() => { buyBtn.style.transform = ''; }, 100); }, 100);
+}, 3000);
+</script>
+</body>
+</html>
